@@ -52,26 +52,15 @@ public class ThumbnailsAdapter extends SimpleCursorAdapter {
 
 
     private void setData(View v, Cursor cursor){
-        String imageId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID));
+
         String thumbPath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
+        String imageName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
 
         TextView name_text = (TextView) v.findViewById(R.id.img_name);
-        name_text.setText(getImageName(imageId));
+        name_text.setText(imageName);
 
         ImageView thumbV = (ImageView) v.findViewById(R.id.thumb);
         thumbV.setImageBitmap(BitmapFactory.decodeFile(thumbPath));
     }
 
-    private String getImageName (String imageId){
-        String imageName = "";
-        CursorLoader cLoader = new CursorLoader(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                null, MediaStore.Images.Media._ID + "=" + imageId , null, null);
-        Cursor imageCursor = cLoader.loadInBackground();
-        if (imageCursor != null && imageCursor.getCount() > 0) {
-            imageCursor.moveToFirst();
-            imageName = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
-        }
-        imageCursor.close();
-        return imageName;
-    }
 }

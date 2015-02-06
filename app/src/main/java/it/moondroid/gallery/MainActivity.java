@@ -26,8 +26,6 @@ public class MainActivity extends ActionBarActivity
     //define source of MediaStore.Images.Media, internal or external storage
     final Uri sourceUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
     final Uri thumbUri = MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI;
-//    final String thumb_DATA = MediaStore.Images.Thumbnails.DATA;
-//    final String thumb_IMAGE_ID = MediaStore.Images.Thumbnails.IMAGE_ID;
 
     SimpleCursorAdapter mySimpleCursorAdapter;
 
@@ -62,16 +60,6 @@ public class MainActivity extends ActionBarActivity
                 R.layout.grid_item_image,
                 null
         );
-
-
-//        mySimpleCursorAdapter = new SimpleCursorAdapter(
-//                this,
-//                R.layout.grid_item_image,
-//                null,
-//                new String[] { MediaStore.Images.Media.DATA} ,
-//                new int[] { R.id.thumb},
-//                0
-//        );
 
         myGridView.setAdapter(mySimpleCursorAdapter);
         myGridView.setOnItemClickListener(this);
@@ -124,13 +112,7 @@ public class MainActivity extends ActionBarActivity
                         MediaStore.Images.Media.DATE_TAKEN + " DESC"  // Default sort order
                 );
             case THUMB_LOADER_ID:
-                return new CursorLoader(
-                        this,
-                        thumbUri,
-                        null,
-                        null,
-                        null,
-                        MediaStore.Images.Thumbnails.IMAGE_ID + " DESC");
+                return new ThumbnailsLoader(this);
             default:
                 // An invalid id was passed in
                 return null;
@@ -171,11 +153,13 @@ public class MainActivity extends ActionBarActivity
 
         /** Getting the image_id from the cursor */
         /** image_id of the thumbnail is same as the original image id */
-        String imageId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID));
+        String imageId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID));
+        String imageName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
+        Toast.makeText(MainActivity.this, imageName, Toast.LENGTH_SHORT).show();
 
         /** Creating a bundle object to pass the image_id to the ImageDialog */
-        Bundle b = new Bundle();
-
+//        Bundle b = new Bundle();
+//
 //        /** Storing image_id in the bundle object */
 //        b.putString(MediaStore.Images.Thumbnails.IMAGE_ID, imageId);
 //
@@ -189,17 +173,17 @@ public class MainActivity extends ActionBarActivity
 //        img.show(getSupportFragmentManager(), "IMAGEDIALOG");
 
         /** Setting uri to the original image files stored in external storage device */
-        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-        /** Creating a cursor loader from the uri corresponds to mID **/
-        CursorLoader cLoader= new CursorLoader(this, uri, null, MediaStore.Images.Media._ID + "=" + imageId , null, null);
-        Cursor imageCursor = cLoader.loadInBackground();
-        if (imageCursor != null && imageCursor.getCount() > 0) {
-            imageCursor.moveToFirst();
-            String imageName = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
-            Toast.makeText(MainActivity.this, imageName, Toast.LENGTH_SHORT).show();
-            imageCursor.close();
-        }
+//        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+//
+//        /** Creating a cursor loader from the uri corresponds to mID **/
+//        CursorLoader cLoader= new CursorLoader(this, uri, null, MediaStore.Images.Media._ID + "=" + imageId , null, null);
+//        Cursor imageCursor = cLoader.loadInBackground();
+//        if (imageCursor != null && imageCursor.getCount() > 0) {
+//            imageCursor.moveToFirst();
+//            String imageName = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
+//            Toast.makeText(MainActivity.this, imageName, Toast.LENGTH_SHORT).show();
+//            imageCursor.close();
+//        }
 
     }
 }
