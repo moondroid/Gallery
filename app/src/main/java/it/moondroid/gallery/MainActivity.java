@@ -2,6 +2,7 @@ package it.moondroid.gallery;
 
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -156,6 +157,14 @@ public class MainActivity extends ActionBarActivity
         String imageId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID));
         String imageName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
         Toast.makeText(MainActivity.this, imageName, Toast.LENGTH_SHORT).show();
+
+        Uri imageUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageId);
+
+        Intent intent = new Intent();
+        intent.setAction(android.content.Intent.ACTION_VIEW);
+        intent.addCategory(android.content.Intent.CATEGORY_DEFAULT);
+        intent.setDataAndType(imageUri, "image/*");
+        startActivity(intent);
 
         /** Creating a bundle object to pass the image_id to the ImageDialog */
 //        Bundle b = new Bundle();
